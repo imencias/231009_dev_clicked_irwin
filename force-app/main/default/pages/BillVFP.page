@@ -1,0 +1,70 @@
+<apex:page standardController="Bill__c" renderAs="pdf">
+    <!--
+        The following outputTexts that are not rendered are used so that we
+        can access the values for the fields in a table per documentation here:
+        https://help.salesforce.com/s/articleView?id=000385722&type=1
+    -->
+    <apex:outputText value="{!Bill__c.Name}" rendered="false"/>
+    <apex:outputText value="{!Bill__c.Balance__c}" rendered="false"/>
+    <apex:outputText value="{!Bill__c.Bill_Id__c}" rendered="false"/>
+    
+    <apex:pageBlock >
+
+    <!--
+        Because we are using the standard controller for the child object
+        we can access fields on the Parent object by utilizing the relationship
+        between the Bill__c and Account object, Account__r, as seen below:
+    -->
+    You are looking at the Most Recent Bill for {!Bill__c.Account__r.Name}.
+    <!--
+        The general format of fields on the Parent object will be:
+        ChildObject__c.ParentObject__r.FieldName__c
+
+        The general format of fields on the Child object will be:
+        ChildObject__c.FieldName__c
+    -->
+
+    <!--
+        Display information from the account here in an organized fasion,
+        such as  phone number, email address, billing address, and shipping address.
+
+        Hint: use apex:panelGrid and apex:PanelGroup to display this nicely.
+    -->
+	<apex:panelGrid columns="2" width="100%" style="margin-top: 20px" id="ContactGrid">
+        <apex:panelGroup id="Email">
+            <apex:outputText value="Email" id="Email_Label" style="font-size: 115%; font-weight: bold"/><br /><br />
+            <apex:outputText value="{!Bill__c.Account__r.Email__c}" id="Email_Address" style="margin-top: 15px"/><br /><br />
+        </apex:panelGroup>
+        <apex:panelGroup id="Phone">        
+            <apex:outputText value="Phone" id="Phone_Label" style="font-size: 115%; font-weight: bold"/><br /><br />
+            <apex:outputText value="{!Bill__c.Account__r.Phone}" id="Phone_Number"/><br /><br />
+        </apex:panelGroup>
+        <apex:panelGroup id="Billing_Address">
+        	<apex:outputText value="Billing Address" id="Billing_Label" style="font-size: 115%; font-weight: bold"/><br /><br />
+            <apex:outputText value="{!Bill__c.Account__r.BillingStreet}" id="BillStreet" /><br />
+            <apex:outputText value="{!Bill__c.Account__r.BillingState}" id="BillState" />,&nbsp;
+            <apex:outputText value="{!Bill__c.Account__r.BillingCountry}" id="BillCountry" /><br />
+            <apex:outputText value="{!Bill__c.Account__r.BillingPostalCode}" id="BillPostalCode" />
+        </apex:panelGroup>
+        <apex:panelGroup id="Shipping_Address">
+	        <apex:outputText value="Shipping Address" id="Shipping_Label" style="font-size: 115%; font-weight: bold"/><br /><br />
+            <apex:outputText value="{!Bill__c.Account__r.ShippingStreet}" id="ShipStreet"/><br />
+            <apex:outputText value="{!Bill__c.Account__r.ShippingState}" id="ShipState" />,&nbsp;
+            <apex:outputText value="{!Bill__c.Account__r.ShippingCountry}" id="ShipCountry" /><br />
+            <apex:outputText value="{!Bill__c.Account__r.ShippingPostalCode}" id="ShipPostalCode" />
+        </apex:panelGroup>
+    </apex:panelGrid>
+
+    <!--
+        Build a table showing the Bill Summary (Bill Name, Bill Balance, and Bill Id) here.
+        Hint: use apex:pageBlockTable to display this in a table.
+    -->
+    <br /><br /><br /><b>Bill Summary</b>
+    <apex:pageBlockTable value="{!Bill__c}" var="item" style="width: 100%" rules="all">
+        <apex:column value="{!item.Name}" style="border: 0.8px solid black; padding-left: 5px"/>
+        <apex:column value="{!item.Balance__c}" style="border: 0.8px solid black; padding-left: 5px"/>
+        <apex:column value="{!item.Bill_Id__c}" style="border: 0.8px solid black; padding-left: 5px"/>
+    </apex:pageBlockTable>
+
+    </apex:pageBlock>
+</apex:page>
